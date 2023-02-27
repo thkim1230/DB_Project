@@ -57,10 +57,10 @@ public class SalesDAO {
                         rs = stmt.executeQuery(sql);
 
                         while (rs.next()) {
-                                Date pDate = rs.getDate("TO_CHAR(P_DATE,'YYYY/MM')");
+                                String pDateStr = rs.getString("TO_CHAR(P_DATE,'YYYY/MM')");
                                 int sumSales = rs.getInt("SUM(SALES)");
                                 SalesVO vo = new SalesVO();
-                                vo.setP_Date(pDate);
+                                vo.setP_DateStr(pDateStr);
                                 vo.setSales(sumSales);
                                 list.add(vo);
                         }
@@ -75,7 +75,7 @@ public class SalesDAO {
 
         public void monthlySalSelPrint(List<SalesVO> list) {
                 for (SalesVO e : list) {
-                        System.out.println("월 : " + e.getP_Date());
+                        System.out.println("월 : " + e.getP_DateStr());
                         System.out.println("매출 : " + e.getSales());
                         System.out.println("--------------------------------------");
                 }
@@ -90,10 +90,10 @@ public class SalesDAO {
                         rs = stmt.executeQuery(sql);
 
                         while (rs.next()) {
-                                Date pDate = rs.getDate("TO_CHAR(P_DATE,'YYYY')");
+                                String pDate = rs.getString("TO_CHAR(P_DATE,'YYYY')");
                                 int sumSales = rs.getInt("SUM(SALES)");
                                 SalesVO vo = new SalesVO();
-                                vo.setP_Date(pDate);
+                                vo.setP_DateStr((pDate));
                                 vo.setSales(sumSales);
                                 list.add(vo);
                         }
@@ -108,12 +108,66 @@ public class SalesDAO {
 
         public void annualSalSelPrint(List<SalesVO> list) {
                 for (SalesVO e : list) {
-                        System.out.println("년 : " + e.getP_Date());
+                        System.out.println("년 : " + e.getP_DateStr());
                         System.out.println("매출 : " + e.getSales());
                         System.out.println("--------------------------------------");
                 }
         }
 
+        public void salesInsert() {
+                System.out.print("주문번호 : ");
+                int orNo = sc.nextInt();
+                System.out.print("회원번호 : ");
+                int memNo = sc.nextInt();
+                System.out.print("회원이름 : ");
+                String mName = sc.next();
+                System.out.print("상품이름 : ");
+                String purchase  = sc.next();
+                System.out.print("매출 : ");
+                int sales = sc.nextInt();
+                System.out.print("구매날짜 : ");
+                String pDate = sc.next();
 
+                String sql = "INSERT INTO SALES_STATEMENT(ORDER_NO,MEM_ID,MNAME,PURCHASE,SALES,P_DATE) VALUES ("
+                        + orNo + ", " + memNo + ", " + "'" + mName + "'" + ", " + "'" + purchase + "'" + ", "
+                        + sales + ", " + "'" + pDate + "'" + ")";
+                try {
+                        conn = Common.getConnection();
+                        stmt = conn.createStatement();
+                        int ret = stmt.executeUpdate(sql);
+                        System.out.println("Return : " + ret);
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+                Common.close(stmt);
+                Common.close(conn);
+        }
 
+        public void salesUpdate() {
+                System.out.print("변경할 사원의 이름을 입력 하세요 : ");
+                String name = sc.next();
+                System.out.print("상품이름 : ");
+                String purchase = sc.next();
+                System.out.print("매출 : " );
+                int sales = sc.nextInt();
+                System.out.print("구매날짜 : " );
+                String pDate = sc.next();
+
+                String query = "UPDATE SALES_STATEMENT "
+                        + "SET PURCHASE = " + "'" + purchase + "', "
+                        + "SALES = " + sales + ", "
+                        + "P_DATE = " + "'" + pDate + "', "
+                        + "WHERE MNAME = " + "'" + name + "'";
+                try {
+                        conn = Common.getConnection();
+                        stmt = conn.createStatement();
+                        int ret = stmt.executeUpdate(query);
+                        System.out.println("Return : " + ret);
+
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+                Common.close(stmt);
+                Common.close(conn);
+        }
 }

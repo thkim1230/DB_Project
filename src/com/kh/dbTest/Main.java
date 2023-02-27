@@ -37,8 +37,10 @@ public class Main {
                     }
                     break;
                 case 2 :
+                    dao.salesInsert();
                     break;
                 case 3 :
+                    dao.salesUpdate();
                     break;
                 case 4 :
                     System.out.println("메뉴를 종료 합니다.");
